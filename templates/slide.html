@@ -1,0 +1,149 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:"ID";font-weight:800;src:url("{{fonts}}/InterDisplay-ExtraBold.otf")}
+@font-face{font-family:"ID";font-weight:600;src:url("{{fonts}}/InterDisplay-SemiBold.otf")}
+@font-face{font-family:"IT";font-weight:400;src:url("{{fonts}}/Inter-Regular.otf")}
+@font-face{font-family:"IT";font-weight:500;src:url("{{fonts}}/Inter-Medium.otf")}
+@font-face{font-family:"JM";font-weight:300 800;src:url("{{fonts}}/JetBrainsMono.ttf")}
+:root{
+  --bg:#0A0C0E; --panel:#121519; --text:#ECF1F4; --muted:#8C98A2;
+  --acc:{{pal.acc}}; --acc2:{{pal.acc2}};
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+[fill="none"]{fill:none !important}
+
+/* viewport (the "monitor") */
+.vp{position:absolute;background:#000;overflow:hidden;border-radius:{{ 0 if layout=='bleed' else 28 }}px}
+.vp svg{display:block;width:100%;height:100%}
+.vp .dicom{position:absolute;font-family:"JM";font-weight:500;font-size:24px;line-height:1.35;color:var(--muted);letter-spacing:.02em}
+.vp .tl{left:26px;top:22px}.vp .tr{right:26px;top:22px;text-align:right}.vp .bl{left:26px;bottom:20px}.vp .br{right:26px;bottom:20px;text-align:right}
+.vp .tl b{color:var(--text);font-weight:600}
+
+/* tissue looks per modality */
+.mod-us,.mod-doppler{--soft:#878c91;--bright:#e9e9e9;--fluid:#090909;--air:#2b2b2b}
+.mod-ct{--soft:#7a7a7a;--bright:#f3f3f3;--fluid:#3c3c3c;--air:#050505}
+.mod-mri{--soft:#6c6c6c;--bright:#b9b9b9;--fluid:#f2f2f2;--air:#050505}
+.mod-xray{--soft:#575757;--bright:#efefef;--fluid:#7d7d7d;--air:#0c0c0c}
+.mod-diagram{--soft:#2a3138;--bright:#ECF1F4;--fluid:#0A0C0E;--air:#0A0C0E}
+.soft{fill:var(--soft);stroke:var(--soft)} .bright{fill:var(--bright);stroke:var(--bright)}
+.fluid{fill:var(--fluid);stroke:var(--fluid)} .air{fill:var(--air);stroke:var(--air)}
+.lumen{fill:#080808} .flow{fill:url(#flowgrad)}
+.line{stroke:var(--text)} .line-fill{fill:#2a3138} .accent{stroke:var(--acc)}
+
+/* text */
+.txt{position:absolute;left:80px;right:140px}
+.hook{font-family:"ID";font-weight:800;font-size:{{sizes.hook}}px;line-height:1.02;letter-spacing:-.02em;text-wrap:balance}
+.hook em{font-style:normal;color:var(--acc)}
+.sub{margin-top:26px;font-family:"IT";font-size:42px;line-height:1.3;color:var(--muted);max-width:24ch}
+.h{font-family:"ID";font-weight:800;font-size:{{sizes.head}}px;line-height:1.05;letter-spacing:-.015em;text-wrap:balance}
+.lines{margin-top:28px;display:flex;flex-direction:column;gap:20px}
+.lines p{font-family:"IT";font-weight:500;font-size:{{sizes.line}}px;line-height:1.28;padding-left:40px;position:relative;text-wrap:pretty}
+.lines p::before{content:"";position:absolute;left:0;top:.5em;width:18px;height:4px;background:var(--acc)}
+.step{font-family:"JM";font-weight:600;font-size:28px;color:var(--acc);margin-bottom:14px}
+.close .take{font-family:"ID";font-weight:800;font-size:{{sizes.take}}px;line-height:1.06;letter-spacing:-.015em;text-wrap:balance}
+.close .note{margin-top:40px;font-family:"IT";font-size:36px;line-height:1.4;color:var(--muted);max-width:28ch}
+.close .ch{margin-top:56px;font-family:"ID";font-weight:600;font-size:44px;color:var(--acc)}
+.close .by{margin-top:10px;font-family:"IT";font-size:32px;color:var(--text)}
+.band{position:absolute;left:0;right:0;background:linear-gradient(to bottom, rgba(10,12,14,0) 0%, rgba(10,12,14,.92) 22%, rgba(10,12,14,.96) 100%)}
+</style></head>
+<body>
+{% macro viewport(x, y, w, h, o, mod, ann, idx, total) -%}
+<div class="vp mod-{{mod}}" style="left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px">
+  <svg viewBox="0 0 1000 {{ (1000*h/w)|round|int }}" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <filter id="speck" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="{{ '.9 .55' if mod in ('us','doppler') else '1.4' }}" numOctaves="2" seed="{{seed}}"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 {{ 1.9 if mod in ('us','doppler') else 0.9 }} {{ -0.86 if mod in ('us','doppler') else -0.55 }}"/>
+      </filter>
+      <filter id="soften"><feGaussianBlur stdDeviation="{{ 3 if mod in ('us','doppler') else 1 }}"/></filter>
+      <linearGradient id="flowgrad" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#D7332B"/><stop offset=".55" stop-color="#F2913A"/><stop offset=".56" stop-color="#2E6BE6"/><stop offset="1" stop-color="#6FB2FF"/></linearGradient>
+      <clipPath id="fan"><path d="M470 40 L 40 640 A 760 760 0 0 0 960 640 L 530 40 A 40 40 0 0 1 470 40Z"/></clipPath>
+      <radialGradient id="fall" cx="500" cy="40" r="900" gradientUnits="userSpaceOnUse"><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></radialGradient>
+      <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="{{pal.acc}}"/></marker>
+    </defs>
+    {% set H = (1000*h/w)|round|int %}
+    {% set off = ((H-1000)/2)|round|int %}{% set vtop = -off + 70 %}{% set vbot = H - off - 40 %}
+    <g transform="translate(0 {{ off }})">
+      {% if mod in ('us','doppler') %}
+      <g clip-path="url(#fan)">
+        <rect x="-200" y="-400" width="1400" height="1800" fill="#1a1d20"/>
+        <g filter="url(#soften)">{{ o.svg|safe }}</g>
+        <rect x="-200" y="-400" width="1400" height="1800" filter="url(#speck)"/>
+        <rect x="-200" y="-400" width="1400" height="1800" fill="url(#fall)"/>
+      </g>
+      <path d="M470 40 L 40 640 A 760 760 0 0 0 960 640 L 530 40 A 40 40 0 0 1 470 40Z" fill="none" stroke="#8C98A2" stroke-opacity=".35" stroke-width="2"/>
+      {% for i in range(1, 10) %}<line x1="{{ 952 if i % 2 else 962 }}" x2="980" y1="{{ 40 + i*95 }}" y2="{{ 40 + i*95 }}" stroke="#8C98A2" stroke-width="3" opacity=".7"/>{% endfor %}
+      {% elif mod == 'diagram' %}
+      <g>{{ o.svg|safe }}</g>
+      {% else %}
+      <rect x="0" y="-400" width="1000" height="1800" fill="#000"/>
+      <g filter="url(#soften)">{{ o.svg|safe }}</g>
+      <rect x="0" y="-400" width="1000" height="1800" filter="url(#speck)" opacity=".55"/>
+      {% endif %}
+      {% if ann and ann.type != 'none' %}
+        {% set ax, ay = ann.xy %}
+        {% if ann.type == 'arrow' %}
+          {% set tx = ax - 260 if ax > 500 else ax + 260 %}{% set ty = ay - 230 if ay > 300 else ay + 230 %}
+          {% set ty = [[ty, vtop + 160]|max, vbot - 60]|min %}
+          <line x1="{{tx}}" y1="{{ty}}" x2="{{ ax + (24 if tx < ax else -24) }}" y2="{{ ay + (24 if ty < ay else -24) }}" stroke="{{pal.acc}}" stroke-width="9" marker-end="url(#ah)"/>
+          {% set lx = tx %}{% set ly = ty - 26 if ty < ay else ty + 56 %}
+        {% elif ann.type == 'caliper' %}
+          <g stroke="{{pal.acc}}" stroke-width="6" fill="none"><line x1="{{ax-150}}" y1="{{ay}}" x2="{{ax+150}}" y2="{{ay}}" stroke-dasharray="14 10"/>
+          <path d="M{{ax-168}} {{ay-18}} l36 36 M{{ax-168}} {{ay+18}} l36 -36 M{{ax+132}} {{ay-18}} l36 36 M{{ax+132}} {{ay+18}} l36 -36"/></g>
+          {% set lx = ax %}{% set ly = ay - 40 %}
+        {% else %}
+          <ellipse cx="{{ax}}" cy="{{ay}}" rx="130" ry="110" fill="none" stroke="{{pal.acc}}" stroke-width="7" stroke-dasharray="18 12"/>
+          {% set lx = ax %}{% set ly = ay - 140 if ay > 260 else ay + 170 %}
+        {% endif %}
+        {% if ann.label %}
+          {% set ly = [[ly, vtop + 120]|max, vbot]|min %}
+          {% set lw = (ann.label|length) * 27 + 40 %}
+          {% set bx = [[lx - lw/2, 30]|max, 970 - lw]|min %}
+          <rect x="{{bx}}" y="{{ly-46}}" width="{{lw}}" height="62" rx="12" fill="#000" fill-opacity=".78" stroke="{{pal.acc2}}" stroke-width="3"/>
+          <text x="{{bx + lw/2}}" y="{{ly-4}}" text-anchor="middle" font-family="IT" font-weight="500" font-size="44" fill="{{pal.acc2}}">{{ ann.label }}</text>
+        {% endif %}
+      {% endif %}
+    </g>
+  </svg>
+  <div class="dicom tl"><b>{{ channel }}</b><br>{{ modname }}</div>
+  <div class="dicom tr">IMG {{idx}}/{{total}}</div>
+  <div class="dicom bl">Drawn illustration</div>
+  <div class="dicom br">Not a real patient</div>
+</div>
+{%- endmacro %}
+
+{% if kind == 'cover' %}
+  {{ viewport(80, 210, 920, 920, o, mod, ann, idx, total) }}
+  <div class="txt" style="top:1190px">
+    <h1 class="hook">{{ hook_html|safe }}</h1>
+    {% if post.subtitle %}<p class="sub">{{ post.subtitle }}</p>{% endif %}
+  </div>
+
+{% elif kind == 'content' and layout == 'top' %}
+  {{ viewport(80, 190, 920, 860, o, mod, ann, idx, total) }}
+  <div class="txt" style="top:1100px"><p class="step">{{ '%02d'|format(idx-1) }}</p><h2 class="h">{{ slide.heading }}</h2>
+    <div class="lines">{% for l in slide.lines %}<p>{{ l }}</p>{% endfor %}</div></div>
+
+{% elif kind == 'content' and layout == 'split' %}
+  <div class="txt" style="top:190px"><p class="step">{{ '%02d'|format(idx-1) }}</p><h2 class="h">{{ slide.heading }}</h2></div>
+  {{ viewport(80, 470, 920, 700, o, mod, ann, idx, total) }}
+  <div class="txt" style="top:1215px"><div class="lines" style="margin-top:0">{% for l in slide.lines %}<p>{{ l }}</p>{% endfor %}</div></div>
+
+{% elif kind == 'content' %}
+  {{ viewport(0, 0, 1080, 1060, o, mod, ann, idx, total) }}
+  <div class="txt" style="top:1110px"><p class="step">{{ '%02d'|format(idx-1) }}</p><h2 class="h">{{ slide.heading }}</h2>
+    <div class="lines">{% for l in slide.lines %}<p>{{ l }}</p>{% endfor %}</div></div>
+
+{% else %}
+  <div class="txt close" style="top:300px">
+    <p class="step">The takeaway</p>
+    <p class="take">{{ post.takeaway }}</p>
+    <p class="note">For learning only. Your own report should always be explained by your doctor.</p>
+    <p class="ch">{{ channel }}</p>
+    <p class="by">{{ byline }}</p>
+    <p class="note" style="margin-top:18px">One scan explained, every day.</p>
+  </div>
+{% endif %}
+</body></html>

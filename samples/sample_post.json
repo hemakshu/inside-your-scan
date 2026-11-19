@@ -1,0 +1,30 @@
+{
+  "hook": "What \"fatty liver\" on your scan really means",
+  "hook_emphasis": "fatty liver",
+  "subtitle": "One of the most common findings. Here's how to read it.",
+  "cover_visual": {"organ": "liver", "modality": "us", "annotation": {"type": "circle", "anchor": "center", "label": "Bright liver"}},
+  "slides": [
+    {"heading": "Fat makes the liver look brighter",
+     "lines": ["Sound waves bounce back more from fat", "So a fatty liver looks whiter on ultrasound"],
+     "narration": "On ultrasound, fat bounces sound waves back more strongly, so a fatty liver looks brighter than normal.",
+     "visual": {"organ": "liver", "modality": "us", "annotation": {"type": "arrow", "anchor": "upper", "label": "Brighter than normal"}}},
+    {"heading": "Grades 1 to 3",
+     "lines": ["Grade 1: mildly bright", "Grade 2: deeper parts harder to see", "Grade 3: deep parts and vessels hard to see"],
+     "narration": "Doctors grade it from one to three, depending on how bright the liver is and how well the deeper parts can still be seen.",
+     "visual": {"organ": "liver", "modality": "us", "annotation": {"type": "caliper", "anchor": "lower", "label": "Depth"}}},
+    {"heading": "It is common, and often improves",
+     "lines": ["Linked with weight, diabetes and cholesterol", "Gradual weight loss and activity often help"],
+     "narration": "It is very common and linked with weight, blood sugar and cholesterol. The good news: early fatty liver often improves with steady lifestyle changes.",
+     "visual": {"organ": "body", "modality": "diagram", "annotation": {"type": "circle", "anchor": "abdomen", "label": "Liver"}}},
+    {"heading": "What your doctor may do next",
+     "lines": ["Blood tests to check liver function", "A follow-up scan, if needed"],
+     "narration": "Your doctor may order blood tests or a follow-up scan to see how your liver is doing.",
+     "visual": {"organ": "abdomen_ct", "modality": "ct", "annotation": {"type": "arrow", "anchor": "liver", "label": "Liver"}}}
+  ],
+  "takeaway": "A bright liver is a common finding, and often one you can improve.",
+  "hook_narration": "Your scan report says fatty liver. Here is what that actually means.",
+  "cta_narration": "For learning only: always talk to your doctor about your own report. Follow for one scan explained every day.",
+  "yt_title": "What \"Fatty Liver\" on Your Ultrasound Really Means",
+  "yt_description": "Fatty liver is one of the most common findings on an abdominal ultrasound. A radiologist explains why the liver looks brighter, what grades 1–3 mean, and what usually happens next.",
+  "tags": ["fatty liver", "ultrasound", "radiology", "liver health", "grade 1 fatty liver", "scan report explained"]
+}

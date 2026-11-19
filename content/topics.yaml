@@ -1,0 +1,83 @@
+# Topic bank for Inside Your Scan. Rotated by category; never repeats a recent topic.
+# When a category runs out, Claude proposes a new topic inside it (still fully checked).
+# NEVER add anything about the sex of a baby (PC&PNDT Act) or any patient's real case.
+
+categories:
+  report_words:          # decoding words people see on their reports
+    - "What 'fatty liver' on your scan really means"
+    - "What 'hypoechoic' means on an ultrasound report"
+    - "What 'incidental finding' means, and why it is usually harmless"
+    - "What 'unremarkable' means on a scan report (it's good news)"
+    - "What a 'simple cyst' is, and why it is usually harmless"
+    - "What 'calcification' means on a scan"
+    - "What 'mild hydronephrosis' means"
+    - "What 'bulky uterus' means on an ultrasound report"
+    - "What 'hepatomegaly' and 'splenomegaly' mean"
+    - "What 'echogenic' means, and why bright isn't always bad"
+    - "What 'free fluid' on a scan can mean"
+    - "What a 'TI-RADS' score on a thyroid report means"
+    - "What 'disc bulge' on a spine MRI really means"
+    - "What 'mild cardiomegaly' on a chest X-ray means"
+    - "What 'impression' at the end of your report is for"
+
+  which_scan:            # choosing between tests
+    - "Ultrasound vs CT vs MRI: which scan for what"
+    - "Why your doctor ordered an ultrasound first"
+    - "CT or MRI for a headache: what doctors consider"
+    - "Why an X-ray can't show everything"
+    - "What a Doppler scan adds to a normal ultrasound"
+    - "Why some scans need contrast dye"
+    - "What a mammogram shows that an ultrasound doesn't (and vice versa)"
+    - "Why knee pain often needs an MRI, not an X-ray"
+
+  scan_day:              # preparing and what to expect
+    - "Why you need a full bladder for some ultrasounds"
+    - "Why you fast before an abdominal ultrasound"
+    - "Why MRI machines are so loud"
+    - "Why metal matters in an MRI"
+    - "What the cold gel in an ultrasound is for"
+    - "Claustrophobic? What to know before an MRI"
+    - "How long does a CT scan take, and does it hurt?"
+    - "What happens during a transvaginal ultrasound"
+    - "Why you hold your breath during scans"
+
+  common_findings:       # what everyday findings look like
+    - "Gallbladder stones on ultrasound: the bright spot and its shadow"
+    - "Kidney stones: how ultrasound and CT find them"
+    - "Thyroid nodules: most are harmless, here's why"
+    - "Ovarian cysts: why most come and go"
+    - "Fibroids: common, usually benign"
+    - "Prostate size on ultrasound: what it does and doesn't tell you"
+    - "Breast lumps on ultrasound: what makes doctors relaxed or concerned"
+    - "Carotid plaque on a Doppler scan"
+    - "Varicose veins and what a venous Doppler checks"
+    - "Appendicitis: what doctors look for on a scan"
+    - "Why 'normal' scans still matter"
+
+  pregnancy_scans:       # education only; nothing about the baby's sex
+    - "The dating scan: how doctors estimate your due date"
+    - "The 11–14 week NT scan: what it checks"
+    - "The anomaly scan at 18–22 weeks: what doctors look at"
+    - "Amniotic fluid: what 'less' or 'more' fluid means"
+    - "Low-lying placenta: what it means and why it often moves"
+    - "Is ultrasound safe in pregnancy?"
+
+  safety_and_myths:      # radiation, contrast, myths
+    - "How much radiation is in an X-ray vs a CT"
+    - "Ultrasound and MRI use no radiation: what that means"
+    - "Contrast dye allergy: what to tell your doctor"
+    - "Myth: a scan can find every problem"
+    - "Myth: more scans are always better"
+    - "Why the radiologist may suggest another scan"
+    - "Why scan results can take time"
+    - "What a radiologist actually does"
+
+  body_tour:             # anatomy explainers
+    - "Your liver in 40 seconds: what doctors look for"
+    - "Your kidneys on a scan: size, shape and the centre"
+    - "Your thyroid: the butterfly in your neck"
+    - "Your heart's four chambers on an echo"
+    - "Your spine on MRI: bones, discs and the cord"
+    - "Your knee on MRI: what each part is"
+    - "Your chest X-ray: what the white and black mean"
+    - "Your brain on CT: why some areas look darker"

@@ -1,0 +1,44 @@
+# ─────────────────────────────────────────────────────────────
+#  Inside Your Scan — YouTube Shorts autopilot (with your approval)
+#  Secrets never go here: GitHub → Settings → Secrets and variables → Actions
+# ─────────────────────────────────────────────────────────────
+
+paused: false
+
+channel:
+  name: "Inside Your Scan"
+  byline: "Explained by a radiologist, Dr. Hemakshu V. Chaudhari, D.M.R.E"
+  description_footer: |
+    Educational content only. This is not medical advice and cannot replace a consultation:
+    please talk to your own doctor about your report.
+    Visuals are drawn illustrations, not patient images.
+
+schedule:
+  timezone: "Asia/Kolkata"
+  make_from: "06:00"        # from this time, the day's video is made and sent to you on Telegram
+  publish_at: "17:30"       # approved videos go live from this time (morning in the US, afternoon in the UK)
+  latest: "23:30"           # an approved video still goes out until this time; after that it's skipped
+  max_drafts_per_day: 3     # how many times it will remake a video you reject with ❌
+
+content:
+  language: "English"
+  audience: "adults worldwide who just got a scan or a scan report and want to understand it"
+  slides_min: 3
+  slides_max: 4
+  avoid_repeat_posts: 80
+
+llm:
+  model: "claude-sonnet-5-5"
+  max_attempts: 4
+
+reel:
+  voice: "en-US-AndrewNeural"     # calm male voice. Others: en-GB-RyanNeural, en-US-EmmaNeural, en-IN-PrabhatNeural
+  rate: "+4%"
+  music: "pad"                    # "pad" = built-in soft ambient pad (different key each video) · "folder" · "none"
+  music_volume: 0.14
+  max_mb: 19                      # Telegram previews must stay under 20 MB
+
+youtube:
+  category_id: "27"               # Education
+  privacy: "public"
+  made_for_kids: false
