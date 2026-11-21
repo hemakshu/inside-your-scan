@@ -85,7 +85,7 @@ def read_telegram(tg, st):
                 tg.send_text("Commands:\n✅ / ❌ buttons on a preview\n/remake <optional note>: make a new video\n"
                              "/topic <subject>: choose the next subject\n/status: recent videos\n"
                              "Any plain message is used as a note for the next video.")
-            elif text.lower().strip("!. ") in ("hi", "hello", "hey", "ok", "okay", "thanks", "thank you"):
+            elif text.lower().strip("!. ") in ("hi", "hello", "hey", "ok", "okay", "thanks", "thank you", "start"):
                 pass  # greetings aren't notes
             else:
                 st["note"] = text
