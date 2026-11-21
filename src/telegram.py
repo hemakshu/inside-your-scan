@@ -15,9 +15,9 @@ class TG:
         if not self.token:
             raise RuntimeError("TELEGRAM_BOT_TOKEN secret is missing (see README: Telegram).")
 
-    def _call(self, method, files=None, timeout=60, **data):
+    def _call(self, method, files=None, http_timeout=60, **data):
         r = requests.post(f"{API}/bot{self.token}/{method}", data=data if files else None,
-                          json=None if files else data, files=files, timeout=timeout)
+                          json=None if files else data, files=files, timeout=http_timeout)
         j = r.json()
         if not j.get("ok"):
             raise RuntimeError(f"Telegram {method} failed: {j.get('description', r.text[:200])}")
@@ -34,7 +34,7 @@ class TG:
         kb = {"inline_keyboard": [[{"text": "✅ Publish", "callback_data": f"ok:{draft_id}"},
                                    {"text": "❌ Remake", "callback_data": f"no:{draft_id}"}]]}
         with open(video, "rb") as f:
-            res = self._call("sendVideo", files={"video": (video.name, f, "video/mp4")}, timeout=300,
+            res = self._call("sendVideo", files={"video": (video.name, f, "video/mp4")}, http_timeout=300,
                              chat_id=self.chat, caption=caption[:1020], supports_streaming="true",
                              width="1080", height="1920", **({"reply_markup": json.dumps(kb)} if buttons else {}))
         return res["message_id"], res["video"]["file_id"]
