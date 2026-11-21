@@ -47,6 +47,7 @@ The robot checks every 2 hours, so your tap takes effect at the next check. If y
    - Choose **External**.
    - Enter an app name and your email, then **Save**.
    - Under **Audience**, add your Gmail as a test user.
+   - Under **Branding**, set the home page to `https://hemakshu.github.io/`, the privacy policy to `https://hemakshu.github.io/privacy.html` and the authorised domain to `hemakshu.github.io`. Google won't let you publish without these.
    - **Important:** click **Publish app → In production**. While the app stays in "Testing", Google expires the sign-in after 7 days.
 4. Open **APIs & Services → Credentials → Create credentials → OAuth client ID**:
    - Type: **Web application**.
