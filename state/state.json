@@ -31,7 +31,7 @@
     {
       "id": "20261121-1947-d194e",
       "date": "2026-11-21",
-      "status": "pending",
+      "status": "rejected",
       "title": "Why an X-ray Can't Show Everything: Limits Explained",
       "topic": "Why an X-ray can't show everything",
       "category": "which_scan",
@@ -57,5 +57,6 @@
       }
     }
   ],
-  "tg_offset": 10116713
+  "tg_offset": 10116715,
+  "note": "with edit on image 3 as soft tissue muscle and fluid absorbs X-ray less and let pass through while bone absorbs"
 }
