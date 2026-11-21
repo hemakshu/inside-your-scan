@@ -29,14 +29,14 @@ class TG:
     def send_text(self, text):
         return self._call("sendMessage", chat_id=self.chat, text=text, disable_web_page_preview=True)
 
-    def send_preview(self, video: Path, caption: str, draft_id: str):
+    def send_preview(self, video: Path, caption: str, draft_id: str, buttons: bool = True):
         import json
         kb = {"inline_keyboard": [[{"text": "✅ Publish", "callback_data": f"ok:{draft_id}"},
                                    {"text": "❌ Remake", "callback_data": f"no:{draft_id}"}]]}
         with open(video, "rb") as f:
             res = self._call("sendVideo", files={"video": (video.name, f, "video/mp4")}, timeout=300,
                              chat_id=self.chat, caption=caption[:1020], supports_streaming="true",
-                             width="1080", height="1920", reply_markup=json.dumps(kb))
+                             width="1080", height="1920", **({"reply_markup": json.dumps(kb)} if buttons else {}))
         return res["message_id"], res["video"]["file_id"]
 
     def updates(self, offset):

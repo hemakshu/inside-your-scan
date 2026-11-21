@@ -98,14 +98,16 @@ def main():
     tg = TG()
     sch = cfg["schedule"]
     notes = "\n".join(f"• {n}" for n in post.get("review_notes", [])[:3])
-    caption = (("🧪 TEST PREVIEW (mock content)\n" if a.mock else "") +
+    caption = (("🧪 TEST PREVIEW: sample only, never uploaded (no buttons)\n" if a.mock else "") +
                f"🎬 {post['yt_title']}\n\n{post['yt_description']}\n\n"
                f"Tags: {', '.join(post['tags'][:8])}\n" +
                (f"\nReviewer notes (not blocking):\n{notes}\n" if notes else "") +
                f"\n✅ Publish → goes live from {sch['publish_at']} (or at the next check if later)\n"
-               f"❌ Remake → a new video at the next check. Reply with a note to steer it, or /topic <subject>.")
+               f"❌ Remake → a new video at the next check. Reply with a note to steer it, or /topic <subject>.\n"
+               f"⏱ Your tap is picked up at the next check (every ~2 h), so the button may keep loading until then. "
+               f"That's normal: tap once.")
     log("📲 Sending preview to Telegram …")
-    msg_id, file_id = tg.send_preview(final, caption, did)
+    msg_id, file_id = tg.send_preview(final, caption, did, buttons=not a.mock)
     if a.mock:
         log("🧪 Mock preview sent (not added to the schedule).")
         return
