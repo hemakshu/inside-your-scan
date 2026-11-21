@@ -70,7 +70,24 @@ def read_telegram(tg, st):
                 log(f"📝 Next topic set: {st['next_topic']}")
             elif text.lower() in ("/status", "status"):
                 tg.send_text(status_text(st))
-            elif not text.startswith("/"):
+            elif text.lower().split()[0] in ("/remake", "/regenerate", "/redo", "/reject"):
+                extra = text.split(None, 1)[1].strip() if len(text.split(None, 1)) > 1 else ""
+                live = [d for d in st.get("drafts", []) if d["status"] in ("pending", "approved")]
+                if live:
+                    d = live[-1]
+                    d["status"] = "rejected"
+                    tg.edit_caption(d["message_id"], f"❌ Rejected: {d['title']}\nA new video is being made.")
+                if extra:
+                    st["note"] = extra
+                tg.send_text("🔁 OK, making a new video now" + (f", following your note: {extra}" if extra else "") + ".")
+                log(f"🔁 Remake requested{': ' + extra if extra else ''}")
+            elif text.startswith("/"):
+                tg.send_text("Commands:\n✅ / ❌ buttons on a preview\n/remake <optional note>: make a new video\n"
+                             "/topic <subject>: choose the next subject\n/status: recent videos\n"
+                             "Any plain message is used as a note for the next video.")
+            elif text.lower().strip("!. ") in ("hi", "hello", "hey", "ok", "okay", "thanks", "thank you"):
+                pass  # greetings aren't notes
+            else:
                 st["note"] = text
                 tg.send_text("📝 Noted, I'll use that for the next video.")
                 log(f"📝 Note for next draft: {text}")

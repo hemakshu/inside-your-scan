@@ -23,6 +23,32 @@ def _duration(path: Path) -> float:
     return float(json.loads(out)["format"]["duration"])
 
 
+BACKUP_VOICES = ["en-US-AndrewMultilingualNeural", "en-US-GuyNeural", "en-IN-PrabhatNeural"]
+
+
+async def _say(edge_tts, text, voice, rate, f):
+    """Microsoft's free TTS sometimes returns 'No audio was received'. Retry, then try backup voices."""
+    import re
+    text = text.replace("&", " and ")
+    clean = re.sub(r"[<>*_#`~|\[\]{}]", " ", text)
+    clean = re.sub(r"[\U0001F000-\U0001FFFF\u2600-\u27BF]", "", clean)  # emoji
+    clean = re.sub(r"\s+", " ", clean).strip() or "."
+    tries = [(voice, rate)] * 3 + [(v, rate) for v in BACKUP_VOICES if v != voice and voice.split("-")[0] == v.split("-")[0]]
+    last = None
+    for n, (v, r) in enumerate(tries):
+        try:
+            await edge_tts.Communicate(clean, v, rate=r).save(str(f))
+            if f.exists() and f.stat().st_size > 1000:
+                if v != voice:
+                    print(f"  ℹ️  used backup voice {v}", flush=True)
+                return
+            last = RuntimeError("empty audio file")
+        except Exception as e:  # noqa: BLE001
+            last = e
+        await asyncio.sleep(2 + 2 * n)
+    raise RuntimeError(f"voiceover failed after {len(tries)} tries: {last}")
+
+
 async def _tts_all(items, rate, out_dir):
     import edge_tts
     files = []
@@ -30,7 +56,7 @@ async def _tts_all(items, rate, out_dir):
         segs = []
         for j, (text, voice) in enumerate(parts):
             f = out_dir / f"vo_{i:02d}_{j}.mp3"
-            await edge_tts.Communicate(text, voice, rate=rate).save(str(f))
+            await _say(edge_tts, text, voice, rate, f)
             segs.append(f)
         if len(segs) == 1:
             files.append(segs[0])
@@ -60,8 +86,8 @@ def make_voiceover(items, cfg, out_dir: Path, log=print):
     try:
         return asyncio.run(_tts_all(items, cfg["reel"]["rate"], out_dir))
     except Exception as e:  # noqa: BLE001
-        log(f"  ⚠️  voiceover failed: {e}")
-        return [None] * len(items)
+        # never publish a silent video: stop here so the next check tries again
+        raise RuntimeError(f"Voiceover failed, so no video was made this time ({e}). It will try again at the next check.")
 
 
 def _music(cfg, seconds, out_dir):

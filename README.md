@@ -25,6 +25,7 @@ One radiology explainer Short a day, written, checked and made automatically.
    - **❌ Remake**: a new video comes at the next check.
      - Reply with a note (e.g. *"simpler, fewer numbers"*) and it redoes the same topic following your note.
      - Send `/topic Why MRI is loud` to choose the next subject yourself.
+     - Send `/remake` (optionally with a note, e.g. `/remake slower voice`) to replace the current preview.
      - Send `/status` to see recent videos.
 6. **It uploads to YouTube Shorts** and sends you the link.
 
