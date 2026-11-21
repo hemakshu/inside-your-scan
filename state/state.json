@@ -3,7 +3,7 @@
     {
       "id": "20261121-1929-f5466",
       "date": "2026-11-21",
-      "status": "pending",
+      "status": "rejected",
       "title": "Why an X-ray Can't Show Everything: What It Misses",
       "topic": "Why an X-ray can't show everything",
       "category": "which_scan",
@@ -27,8 +27,35 @@
           "medical education"
         ]
       }
+    },
+    {
+      "id": "20261121-1947-d194e",
+      "date": "2026-11-21",
+      "status": "pending",
+      "title": "Why an X-ray Can't Show Everything: Limits Explained",
+      "topic": "Why an X-ray can't show everything",
+      "category": "which_scan",
+      "message_id": 15,
+      "file_id": "BAACAgUAAxkDAAMPawGopjkKsEauNQ0mReqIIFwXBgYAAtkmAALjQglU9fzyeuOA5Wc9BA",
+      "meta": {
+        "yt_title": "Why an X-ray Can't Show Everything: Limits Explained",
+        "full_description": "A radiologist explains how an X-ray makes its picture and why it shows bone well but soft tissue less clearly. You will also learn why a doctor may suggest an ultrasound, CT or MRI after an X-ray. Always discuss your own report with your doctor.\n\nExplained by a radiologist, Dr. Hemakshu V. Chaudhari, D.M.R.E\n\nEducational content only. This is not medical advice and cannot replace a consultation:\nplease talk to your own doctor about your report.\nVisuals are drawn illustrations, not patient images.\n\n#Shorts #Radiology #ScanExplained",
+        "tags": [
+          "why x-ray can't show everything",
+          "x-ray limitations",
+          "what can an x-ray show",
+          "x-ray vs ct scan",
+          "x-ray vs mri",
+          "x-ray vs ultrasound",
+          "normal x-ray but still pain",
+          "how does an x-ray work",
+          "why more scans after x-ray",
+          "radiology",
+          "scan explained",
+          "medical education"
+        ]
+      }
     }
   ],
-  "tg_offset": 10116710,
-  "note": "Start"
+  "tg_offset": 10116713
 }
