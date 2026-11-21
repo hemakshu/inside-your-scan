@@ -11,7 +11,7 @@ UPLOAD_URL = "https://www.googleapis.com/upload/youtube/v3/videos"
 
 class YT:
     def __init__(self, cfg):
-        clean = lambda k: "".join((os.environ.get(k) or "").split())
+        clean = lambda k: "".join((os.environ.get(k) or "").split()).strip("'\"")
         self.client_id, self.secret, self.refresh = clean("YT_CLIENT_ID"), clean("YT_CLIENT_SECRET"), clean("YT_REFRESH_TOKEN")
         if not (self.client_id and self.secret and self.refresh):
             raise RuntimeError("YT_CLIENT_ID / YT_CLIENT_SECRET / YT_REFRESH_TOKEN secrets are missing (see README).")
@@ -26,8 +26,12 @@ class YT:
             if "access_token" not in j:
                 hint = ""
                 if j.get("error") == "invalid_grant":
-                    hint = (" — the refresh token is invalid or expired. If your Google Cloud app is still in "
-                            "'Testing', tokens expire after 7 days: set it to 'In production' and make a new token.")
+                    hint = (" (invalid_grant): Google doesn't accept YT_REFRESH_TOKEN. Usually it was copied incompletely, "
+                            "or it's an older token. Make a fresh one in OAuth Playground and paste the whole 1//… value. "
+                            "If the app is still 'Testing', tokens also expire after 7 days.")
+                elif j.get("error") in ("invalid_client", "unauthorized_client"):
+                    hint = (f" ({j.get('error')}): YT_CLIENT_ID or YT_CLIENT_SECRET is wrong, or the token was made "
+                            "with a different client. Check both secrets match Google Cloud → Clients.")
                 raise RuntimeError(f"YouTube sign-in failed: {j.get('error_description') or j}{hint}")
             self._token = j["access_token"]
         return self._token
