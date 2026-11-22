@@ -64,7 +64,10 @@ def main():
     else:
         note = st.pop("note", None)
         today = [d for d in st["drafts"] if d["date"] == f"{now:%Y-%m-%d}"]
-        if note and today and today[-1]["status"] == "rejected" and not st.get("next_topic"):
+        redo = st.pop("redo", None)
+        if redo and not st.get("next_topic"):
+            topic, cat = redo["topic"], redo["category"]  # /remake: same subject, following your note
+        elif note and today and today[-1]["status"] == "rejected" and not st.get("next_topic"):
             topic, cat = today[-1]["topic"], today[-1]["category"]  # redo the same topic, following your note
         else:
             topic, cat = pick_topic(cfg, st)

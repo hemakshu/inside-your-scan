@@ -32,7 +32,7 @@ llm:
   max_attempts: 4
 
 reel:
-  voice: "en-US-AndrewNeural"     # calm male voice. Others: en-GB-RyanNeural, en-US-EmmaNeural, en-IN-PrabhatNeural
+  voice: "en-US-AndrewMultilingualNeural"     # calm male voice. Others: en-GB-RyanNeural, en-US-EmmaNeural, en-IN-PrabhatNeural
   rate: "+4%"
   music: "pad"                    # "pad" = built-in soft ambient pad (different key each video) · "folder" · "none"
   music_volume: 0.14

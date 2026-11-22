@@ -77,6 +77,7 @@ def read_telegram(tg, st):
                     d = live[-1]
                     d["status"] = "rejected"
                     tg.edit_caption(d["message_id"], f"❌ Rejected: {d['title']}\nA new video is being made.")
+                    st["redo"] = {"topic": d["topic"], "category": d["category"]}  # remake the same subject
                 if extra:
                     st["note"] = extra
                 tg.send_text("🔁 OK, making a new video now" + (f", following your note: {extra}" if extra else "") + ".")
