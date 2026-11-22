@@ -59,7 +59,7 @@
     {
       "id": "20261122-1014-512f1",
       "date": "2026-11-22",
-      "status": "pending",
+      "status": "published",
       "title": "Why an X-ray Can't Show Everything: Bone vs Soft Tissue",
       "topic": "Why an X-ray can't show everything",
       "category": "which_scan",
@@ -82,8 +82,10 @@
           "scan explained",
           "medical education"
         ]
-      }
+      },
+      "video_id": "gYhkzcd3yto",
+      "url": "https://youtube.com/shorts/gYhkzcd3yto"
     }
   ],
-  "tg_offset": 10116716
+  "tg_offset": 10116720
 }
