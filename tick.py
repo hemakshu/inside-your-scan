@@ -47,13 +47,18 @@ def read_telegram(tg, st):
             if not d:
                 tg.answer(cq["id"], "This preview is no longer active.")
                 continue
+            if d["status"] == "expired" and action == "ok":
+                d["status"] = "pending"  # a late ✅ on an older preview still counts
             if d["status"] != "pending":
                 tg.answer(cq["id"], f"Already {d['status']}.")
                 continue
             if action == "ok":
                 d["status"] = "approved"
-                tg.answer(cq["id"], "Approved ✅ It will go live at the next publishing time.")
-                tg.edit_caption(d["message_id"], f"✅ Approved: {d['title']}\nGoes live from {S_cfg['schedule']['publish_at']}.")
+                tg.answer(cq["id"], "Approved ✅ Nothing else to do: it goes live automatically.")
+                tg.edit_caption(d["message_id"], f"✅ Approved: {d['title']}\nGoes live automatically from "
+                                                 f"{S_cfg['schedule']['publish_at']} IST. You'll get the link here.")
+                tg.send_text(f"✅ Approved: {d['title']}\nIt goes live automatically from {S_cfg['schedule']['publish_at']} "
+                             "IST. I'll send you the YouTube link. Nothing else to do.")
                 log(f"✅ You approved: {d['title']}")
             elif action == "no":
                 d["status"] = "rejected"
@@ -131,10 +136,19 @@ def main():
 
     read_telegram(tg, st)
 
-    # tidy: drafts from earlier days that never went out
+    # tidy: previews from earlier days you never answered are replaced by today's
     for d in st["drafts"]:
-        if d["date"] < day and d["status"] in ("pending", "approved"):
+        if d["date"] < day and d["status"] == "pending":
             d["status"] = "expired"
+    # approved on an earlier day but never published (e.g. GitHub skipped the evening checks): publish now
+    for d in [d for d in st["drafts"] if d["date"] < day and d["status"] == "approved"]:
+        try:
+            publish(cfg, st, tg, d)
+        except Exception as e:  # noqa: BLE001
+            d["error"] = str(e)[:300]
+            tg.send_text(f"⚠️ Couldn't publish '{d['title']}': {str(e)[:300]}\nI'll retry at the next check.")
+            S.save(st)
+            raise
     # keep the list short
     st["drafts"] = st["drafts"][-40:]
 

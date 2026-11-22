@@ -2,9 +2,9 @@ name: Inside Your Scan
 
 on:
   schedule:
-    # Wakes up every hour from about 6:17 am to 12:17 am IST. GitHub often runs scheduled jobs late or
-    # skips some, so hourly keeps things moving. Each wake-up takes ~15 seconds unless a video is being made.
-    - cron: "47 0-18 * * *"
+    # Wakes up every 30 minutes. GitHub often runs scheduled jobs late or skips some, so frequent checks keep
+    # things moving. Each wake-up takes ~15 seconds unless a video is being made. Free if the repo is public.
+    - cron: "17,47 * * * *"
   workflow_dispatch:
     inputs:
       mode:
