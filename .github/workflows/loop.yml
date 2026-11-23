@@ -1,0 +1,42 @@
+name: Inside Your Scan (always on)
+
+# Checks Telegram and publishes every 5 minutes, all day.
+# Each run lasts ~5.5 hours and then starts the next one itself, so nothing depends on
+# GitHub's scheduled runs (which are often skipped or hours late). Free because the repo is public.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 */3 * * *"   # backup: restarts the loop if it ever stops (skips if one is running)
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: isy-loop
+  cancel-in-progress: false
+
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests pyyaml
+      - name: Check every 5 minutes
+        run: bash loop.sh
+      - name: Start the next round
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run loop.yml -R "${{ github.repository }}" --ref main

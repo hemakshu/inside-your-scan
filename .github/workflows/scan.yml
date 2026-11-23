@@ -1,10 +1,7 @@
 name: Inside Your Scan
 
 on:
-  schedule:
-    # Wakes up every 30 minutes. GitHub often runs scheduled jobs late or skips some, so frequent checks keep
-    # things moving. Each wake-up takes ~15 seconds unless a video is being made. Free if the repo is public.
-    - cron: "17,47 * * * *"
+  # Automatic checks now run in loop.yml ("always on"). This workflow is for manual runs only.
   workflow_dispatch:
     inputs:
       mode:
@@ -40,7 +37,7 @@ jobs:
 
       - name: Quick check (Telegram taps, publishing)
         id: tick
-        if: github.event_name == 'schedule' || inputs.mode == 'tick'
+        if: inputs.mode == 'tick'
         run: |
           pip install -q requests pyyaml
           python tick.py

@@ -29,7 +29,7 @@ One radiology explainer Short a day, written, checked and made automatically.
      - Send `/status` to see recent videos.
 6. **It uploads to YouTube Shorts** and sends you the link.
 
-The robot checks every 2 hours, so your tap takes effect at the next check. If you approve after 5:30 pm, it publishes at the next check, up until 11:30 pm.
+The robot checks every 5 minutes, all day (`loop.yml`, always on), so a tap takes effect within about 5 minutes. You can also type **publish** to approve the latest preview.
 
 ---
 

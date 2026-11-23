@@ -35,6 +35,8 @@ def read_telegram(tg, st):
     """Apply button taps and notes since the last check."""
     offset = st.get("tg_offset", 0)
     ups = tg.updates(offset)
+    kinds = [("tap" if u.get("callback_query") else "message" if u.get("message") else "other") for u in ups]
+    log(f"📨 Telegram: {len(ups)} new update(s) {kinds if ups else ''}")
     by_id = {d["id"]: d for d in st.get("drafts", [])}
     for u in ups:
         st["tg_offset"] = u["update_id"] + 1
@@ -75,6 +77,18 @@ def read_telegram(tg, st):
                 log(f"📝 Next topic set: {st['next_topic']}")
             elif text.lower() in ("/status", "status"):
                 tg.send_text(status_text(st))
+            elif text.lower().strip("!. ") in ("/publish", "publish", "✅", "approve", "/approve", "publish it"):
+                pend = [d for d in st.get("drafts", []) if d["status"] in ("pending", "expired")]
+                if pend:
+                    d = pend[-1]
+                    d["status"] = "approved"
+                    tg.edit_caption(d["message_id"], f"✅ Approved: {d['title']}\nGoes live automatically from "
+                                                     f"{S_cfg['schedule']['publish_at']} IST.")
+                    tg.send_text(f"✅ Approved: {d['title']}\nIt goes live automatically from "
+                                 f"{S_cfg['schedule']['publish_at']} IST. I'll send you the link.")
+                    log(f"✅ You approved by message: {d['title']}")
+                else:
+                    tg.send_text("There's no video waiting for approval right now.")
             elif text.lower().split()[0] in ("/remake", "/regenerate", "/redo", "/reject"):
                 extra = text.split(None, 1)[1].strip() if len(text.split(None, 1)) > 1 else ""
                 live = [d for d in st.get("drafts", []) if d["status"] in ("pending", "approved")]
@@ -88,7 +102,7 @@ def read_telegram(tg, st):
                 tg.send_text("🔁 OK, making a new video now" + (f", following your note: {extra}" if extra else "") + ".")
                 log(f"🔁 Remake requested{': ' + extra if extra else ''}")
             elif text.startswith("/"):
-                tg.send_text("Commands:\n✅ / ❌ buttons on a preview\n/remake <optional note>: make a new video\n"
+                tg.send_text("Commands:\n✅ / ❌ buttons on a preview (or type: publish)\n/remake <optional note>: make a new video\n"
                              "/topic <subject>: choose the next subject\n/status: recent videos\n"
                              "Any plain message is used as a note for the next video.")
             elif text.lower().strip("!. ") in ("hi", "hello", "hey", "ok", "okay", "thanks", "thank you", "start"):
