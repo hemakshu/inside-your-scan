@@ -120,7 +120,7 @@
     {
       "id": "20261124-0605-faf65",
       "date": "2026-11-24",
-      "status": "pending",
+      "status": "approved",
       "title": "What a Doppler Scan Adds to a Normal Ultrasound",
       "topic": "What a Doppler scan adds to a normal ultrasound",
       "category": "which_scan",
@@ -146,5 +146,5 @@
       }
     }
   ],
-  "tg_offset": 10116720
+  "tg_offset": 10116726
 }
