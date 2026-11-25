@@ -150,7 +150,7 @@
     {
       "id": "20261125-0602-75af9",
       "date": "2026-11-25",
-      "status": "pending",
+      "status": "published",
       "title": "Varicose Veins: What a Leg Vein Doppler Ultrasound Checks",
       "topic": "Varicose veins and what a venous Doppler checks",
       "category": "common_findings",
@@ -174,8 +174,10 @@
           "scan explained",
           "medical education"
         ]
-      }
+      },
+      "video_id": "wwyMuO1jFB8",
+      "url": "https://youtube.com/shorts/wwyMuO1jFB8"
     }
   ],
-  "tg_offset": 10116726
+  "tg_offset": 10116753
 }
