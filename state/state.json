@@ -181,7 +181,7 @@
     {
       "id": "20261126-0605-9f8a9",
       "date": "2026-11-26",
-      "status": "pending",
+      "status": "rejected",
       "title": "NT Scan at 11–14 Weeks: What It Checks and Means",
       "topic": "The 11–14 week NT scan: what it checks",
       "category": "pregnancy_scans",
@@ -207,5 +207,10 @@
       }
     }
   ],
-  "tg_offset": 10116753
+  "tg_offset": 10116754,
+  "redo": {
+    "topic": "The 11–14 week NT scan: what it checks",
+    "category": "pregnancy_scans"
+  },
+  "note": "with the same content but image illustration is wrong. So correct the illustration"
 }
