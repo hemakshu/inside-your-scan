@@ -49,6 +49,17 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:
 .band{position:absolute;left:0;right:0;background:linear-gradient(to bottom, rgba(10,12,14,0) 0%, rgba(10,12,14,.92) 22%, rgba(10,12,14,.96) 100%)}
 </style></head>
 <body>
+{% macro refview(x, y, w, h, src, idx, total) -%}
+<div class="vp ref" style="left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;background:#000">
+  <style>.vp.ref .dicom{background:rgba(0,0,0,.72);padding:4px 10px;border-radius:8px;color:#fff}</style>
+  <img src="{{src}}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain">
+  <div class="dicom tl"><b>{{ channel }}</b><br>Real scan</div>
+  <div class="dicom tr">IMG {{idx}}/{{total}}</div>
+  <div class="dicom bl">Real scan · anonymised</div>
+  <div class="dicom br">Shared by the radiologist</div>
+</div>
+{%- endmacro %}
+
 {% macro viewport(x, y, w, h, o, mod, ann, idx, total) -%}
 <div class="vp mod-{{mod}}" style="left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px">
   <svg viewBox="0 0 1000 {{ (1000*h/w)|round|int }}" preserveAspectRatio="xMidYMid slice">
@@ -122,17 +133,17 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:
   </div>
 
 {% elif kind == 'content' and layout == 'top' %}
-  {{ viewport(80, 190, 920, 860, o, mod, ann, idx, total) }}
+  {% if slide and slide.ref_src %}{{ refview(80, 190, 920, 860, slide.ref_src, idx, total) }}{% else %}{{ viewport(80, 190, 920, 860, o, mod, ann, idx, total) }}{% endif %}
   <div class="txt" style="top:1100px"><p class="step">{{ '%02d'|format(idx-1) }}</p><h2 class="h">{{ slide.heading }}</h2>
     <div class="lines">{% for l in slide.lines %}<p>{{ l }}</p>{% endfor %}</div></div>
 
 {% elif kind == 'content' and layout == 'split' %}
   <div class="txt" style="top:190px"><p class="step">{{ '%02d'|format(idx-1) }}</p><h2 class="h">{{ slide.heading }}</h2></div>
-  {{ viewport(80, 470, 920, 700, o, mod, ann, idx, total) }}
+  {% if slide and slide.ref_src %}{{ refview(80, 470, 920, 700, slide.ref_src, idx, total) }}{% else %}{{ viewport(80, 470, 920, 700, o, mod, ann, idx, total) }}{% endif %}
   <div class="txt" style="top:1215px"><div class="lines" style="margin-top:0">{% for l in slide.lines %}<p>{{ l }}</p>{% endfor %}</div></div>
 
 {% elif kind == 'content' %}
-  {{ viewport(0, 0, 1080, 1060, o, mod, ann, idx, total) }}
+  {% if slide and slide.ref_src %}{{ refview(0, 0, 1080, 1060, slide.ref_src, idx, total) }}{% else %}{{ viewport(0, 0, 1080, 1060, o, mod, ann, idx, total) }}{% endif %}
   <div class="txt" style="top:1110px"><p class="step">{{ '%02d'|format(idx-1) }}</p><h2 class="h">{{ slide.heading }}</h2>
     <div class="lines">{% for l in slide.lines %}<p>{{ l }}</p>{% endfor %}</div></div>
 

@@ -72,6 +72,27 @@ def main():
         else:
             topic, cat = pick_topic(cfg, st)
         brief = topic + (f"\n(Note from the radiologist for this video: {note})" if note else "")
+        ref_path = None
+        if st.get("ref_images"):
+            ref = st.pop("ref_images")[-1]
+            from src.telegram import TG as _TG
+            (ROOT / "out").mkdir(exist_ok=True)
+            if ref.get("path"):  # an image saved in the repo (e.g. added by Claude)
+                ref_path = ROOT / ref["path"]
+            else:
+                ref_path = _TG().download(ref["file_id"], ROOT / "out" / "reference_scan.jpg")
+            ok, desc = generator.describe_reference(cfg, ref_path, ref.get("caption", ""))
+            if not ok:
+                log("⚠️  Reference image seems to show patient details; not using it.")
+                _TG().send_text("⚠️ I didn't use your reference image: it seems to show a patient name, ID or date. "
+                                "Crop or blank those out and send it again.")
+                ref_path = None
+            else:
+                log(f"🖼 Using your reference scan: {desc[:120]}")
+                brief += ("\n\nREAL SCAN SLIDE: the radiologist supplied a real, anonymised scan image. Content slide 1 "
+                          "will SHOW THIS IMAGE instead of a drawing. Make slide 1's heading like 'On a real scan', and "
+                          "use its lines and narration to walk the viewer through what it shows and what each label "
+                          f"points to. What the image shows: {desc}")
         log(f"🧠 Topic: {topic} [{cat}]" + (f" — with your note: {note}" if note else ""))
         try:
             post = generator.create_checked_post(cfg, brief, cat, log)
@@ -83,6 +104,8 @@ def main():
                                                                 indent=2, ensure_ascii=False), encoding="utf-8")
             raise
         post["topic"] = topic
+        if ref_path and post.get("slides"):
+            post["slides"][0]["ref_image"] = str(ref_path)
 
     did = f"{now:%Y%m%d-%H%M}-" + hashlib.md5(post["yt_title"].encode()).hexdigest()[:5]
     out = ROOT / "out" / did
@@ -92,6 +115,8 @@ def main():
     video = reel.build_reel(post, frames, cfg, out / "frames", log)
     final = out / "short.mp4"
     video.replace(final)
+    for sl in post.get("slides", []):
+        sl.pop("ref_src", None)
     (out / "post.json").write_text(json.dumps(post, indent=2, ensure_ascii=False), encoding="utf-8")
     log(f"📁 Saved to {final.relative_to(ROOT)}")
     if a.no_send:
@@ -114,6 +139,9 @@ def main():
     if a.mock:
         log("🧪 Mock preview sent (not added to the schedule).")
         return
+    for d in st["drafts"]:  # an older unanswered preview from today is replaced by this one
+        if d["date"] == f"{now:%Y-%m-%d}" and d["status"] == "pending":
+            d["status"] = "replaced"
     st["drafts"].append({"id": did, "date": f"{now:%Y-%m-%d}", "status": "pending", "title": post["yt_title"],
                          "topic": post["topic"], "category": post["category"], "message_id": msg_id, "file_id": file_id,
                          "meta": {k: post[k] for k in ("yt_title", "full_description", "tags")}})

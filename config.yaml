@@ -11,7 +11,7 @@ channel:
   description_footer: |
     Educational content only. This is not medical advice and cannot replace a consultation:
     please talk to your own doctor about your report.
-    Visuals are drawn illustrations, not patient images.
+    Visuals are drawn illustrations; any real scan shown is anonymised and shared by the radiologist.
 
 schedule:
   timezone: "Asia/Kolkata"

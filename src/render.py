@@ -73,6 +73,12 @@ def render_post(post, cfg, out_dir: Path):
     env = Environment(loader=FileSystemLoader(str(ROOT / "templates")), autoescape=True)
     tpl = env.get_template("slide.html")
     pal, layout, seed = style_for(post)
+    for sl in post.get("slides", []):
+        if sl.get("ref_image") and Path(sl["ref_image"]).exists():
+            import base64
+            raw = Path(sl["ref_image"]).read_bytes()
+            mt = "image/png" if raw[:4] == b"\x89PNG" else "image/jpeg"
+            sl["ref_src"] = f"data:{mt};base64," + base64.b64encode(raw).decode()
     plan = page_plan(post)
     total = len(plan)
     files = []

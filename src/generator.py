@@ -1,6 +1,7 @@
 """Writes each Short with Claude (structured output), then a second Claude call reviews it as a
 senior radiologist. Only reviewed drafts are rendered and sent to you for approval."""
 import json
+from pathlib import Path
 import os
 import re
 import time
@@ -152,7 +153,10 @@ channel. Block anything wrong or harmful; do not block a good video over taste o
 
 
 def review_post(cfg, post):
-    user = f"""Review this YouTube Short draft (the visuals are drawn illustrations chosen from a fixed library).
+    ref_note = ("\nNote: content slide 1 shows a REAL anonymised scan image supplied by the radiologist (described in "
+                "the topic brief); its text is meant to walk the viewer through that image."
+                if "REAL SCAN SLIDE" in post.get("_brief", "") else "")
+    user = f"""Review this YouTube Short draft (the visuals are drawn illustrations chosen from a fixed library).{ref_note}
 
 Mark an issue BLOCKING only if you are confident it is one of these:
 1. A medically wrong, outdated or misleading statement; a wrong or invented number; an annotation pointing at
@@ -181,6 +185,24 @@ class DraftRejected(RuntimeError):
         self.draft, self.issues = draft, issues
 
 
+def describe_reference(cfg, image_path, caption=""):
+    """Look at a real scan the radiologist sent. Returns (ok, description)."""
+    import base64
+    data = base64.b64encode(Path(image_path).read_bytes()).decode()
+    mt = "image/png" if Path(image_path).read_bytes()[:4] == b"\x89PNG" else "image/jpeg"
+    content = [{"type": "image", "source": {"type": "base64", "media_type": mt, "data": data}},
+               {"type": "text", "text": (
+                   "This is a real, anonymised scan image a radiologist wants to show in a patient-education Short."
+                   + (f" His note: {caption}" if caption else "") +
+                   "\nLine 1: write exactly IDENTIFIERS: YES if any patient name, ID number, date of birth or hospital "
+                   "name is readable in the image, otherwise IDENTIFIERS: NO.\nThen, in at most 60 words, describe what "
+                   "the image shows and what each visible label/marker points to, in plain language for a layperson. "
+                   "Never mention or guess the baby's sex.")}]
+    text = _call_claude(cfg, "You describe medical images accurately and briefly.", content, max_tokens=300)
+    first, _, rest = text.strip().partition("\n")
+    return ("YES" not in first.upper()), rest.strip()
+
+
 def create_checked_post(cfg, topic, category, log=print, extra_feedback=None):
     feedback, previous, post, polish = (extra_feedback or None), None, None, []
     for attempt in range(1, cfg["llm"]["max_attempts"] + 1):
@@ -197,7 +219,9 @@ def create_checked_post(cfg, topic, category, log=print, extra_feedback=None):
             continue
         log("  🔎 senior-radiologist review …")
         try:
+            post["_brief"] = topic
             blocking, polish = review_post(cfg, post)
+            post.pop("_brief", None)
         except (ValueError, KeyError, TypeError) as e:
             log(f"  ⚠️  review unusable ({e}) — reviewing a fresh draft")
             continue

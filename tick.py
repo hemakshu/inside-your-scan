@@ -69,6 +69,18 @@ def read_telegram(tg, st):
                 log(f"❌ You rejected: {d['title']}")
             continue
         msg = u.get("message")
+        if msg and str(msg["chat"]["id"]) == tg.chat and (msg.get("photo") or msg.get("document", {}).get(
+                "mime_type", "").startswith("image/")):
+            # a real reference scan (photo, or image sent as a file); its caption is read as a normal message below
+            fid = msg["photo"][-1]["file_id"] if msg.get("photo") else msg["document"]["file_id"]
+            st.setdefault("ref_images", []).append({"file_id": fid, "caption": (msg.get("caption") or "").strip()})
+            st["ref_images"] = st["ref_images"][-3:]
+            tg.send_text("🖼 Got your reference scan. The next video will show it as a real-scan slide "
+                         "(make sure no patient name, ID or date is visible).")
+            log("🖼 Reference image received")
+            if not (msg.get("caption") or "").strip():
+                continue
+            msg = dict(msg, text=msg["caption"])
         if msg and str(msg["chat"]["id"]) == tg.chat and msg.get("text"):
             text = msg["text"].strip()
             if text.lower().startswith("/topic "):
