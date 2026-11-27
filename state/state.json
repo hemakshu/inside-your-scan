@@ -205,12 +205,35 @@
           "medical education"
         ]
       }
+    },
+    {
+      "id": "20261127-1725-9a992",
+      "date": "2026-11-27",
+      "status": "pending",
+      "title": "11–14 Week NT Scan Explained: What It Checks",
+      "topic": "The 11–14 week NT scan: what it checks",
+      "category": "pregnancy_scans",
+      "message_id": 35,
+      "file_id": "BAACAgUAAxkDAAMjawlwUvp3ch9bG-7wFM4xQYR5TnIAAsAgAAKW6lFUfXNyXjTOT209BA",
+      "meta": {
+        "yt_title": "11–14 Week NT Scan Explained: What It Checks",
+        "full_description": "The NT scan is an early pregnancy ultrasound done at about 11 to 14 weeks. This video explains what the sonographer checks, what nuchal translucency means, and why the result is a screening estimate rather than a diagnosis.\n\nExplained by a radiologist, Dr. Hemakshu V. Chaudhari, D.M.R.E\n\nEducational content only. This is not medical advice and cannot replace a consultation:\nplease talk to your own doctor about your report.\nVisuals are drawn illustrations, not patient images.\n\n#Shorts #Radiology #ScanExplained",
+        "tags": [
+          "NT scan",
+          "nuchal translucency",
+          "11 to 14 week scan",
+          "first trimester ultrasound",
+          "NT scan explained",
+          "pregnancy scan",
+          "what does NT scan check",
+          "dating scan",
+          "first trimester screening",
+          "radiology",
+          "scan explained",
+          "medical education"
+        ]
+      }
     }
   ],
-  "tg_offset": 10116754,
-  "redo": {
-    "topic": "The 11–14 week NT scan: what it checks",
-    "category": "pregnancy_scans"
-  },
-  "note": "with the same content but image illustration is wrong. So correct the illustration"
+  "tg_offset": 10116754
 }
