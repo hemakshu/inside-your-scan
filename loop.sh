@@ -27,7 +27,7 @@ while [ "$(date +%s)" -lt "$END" ]; do
   echo "── $(TZ=Asia/Kolkata date '+%a %d %b %H:%M IST')"
   OUT=$(mktemp)
   GITHUB_OUTPUT=$OUT python tick.py || echo "⚠️  quick check failed; trying again in 5 minutes"
-  if grep -q "make=true" "$OUT" && [ "$(date +%s)" -ge "$NEXT_MAKE_OK" ] && [ "$MAKE_FAILS" -lt 3 ]; then
+  if grep -q "make=true" "$OUT" && [ "$(date +%s)" -ge "$NEXT_MAKE_OK" ] && [ "$MAKE_FAILS" -lt 6 ]; then
     if [ "$TOOLS" = 0 ]; then
       echo "🔧 Installing video tools …"
       sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
@@ -37,8 +37,8 @@ while [ "$(date +%s)" -lt "$END" ]; do
       MAKE_FAILS=0
     else
       MAKE_FAILS=$((MAKE_FAILS + 1))
-      NEXT_MAKE_OK=$(( $(date +%s) + 3600 ))   # don't retry a failed video for an hour
-      echo "⚠️  video failed ($MAKE_FAILS); next try in an hour"
+      NEXT_MAKE_OK=$(( $(date +%s) + 1800 ))   # retry a failed video after 30 minutes
+      echo "⚠️  video failed ($MAKE_FAILS); next try in 30 minutes"
     fi
   fi
   save_state
