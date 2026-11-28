@@ -237,7 +237,7 @@
     {
       "id": "20261128-0601-7f0c8",
       "date": "2026-11-28",
-      "status": "pending",
+      "status": "approved",
       "title": "11–14 Week NT Scan: What NT and Nasal Bone Mean",
       "topic": "The 11–14 week NT scan: what it checks",
       "category": "pregnancy_scans",
@@ -263,5 +263,5 @@
       }
     }
   ],
-  "tg_offset": 10116758
+  "tg_offset": 10116772
 }
