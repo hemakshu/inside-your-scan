@@ -233,18 +233,35 @@
           "medical education"
         ]
       }
-    }
-  ],
-  "tg_offset": 10116758,
-  "redo": {
-    "topic": "The 11–14 week NT scan: what it checks",
-    "category": "pregnancy_scans"
-  },
-  "ref_images": [
+    },
     {
-      "path": "content/reference/nt_scan_example.png",
-      "caption": "Real NT scan: NB = nasal bone, NT calipers = nuchal translucency"
+      "id": "20261128-0601-7f0c8",
+      "date": "2026-11-28",
+      "status": "pending",
+      "title": "11–14 Week NT Scan: What NT and Nasal Bone Mean",
+      "topic": "The 11–14 week NT scan: what it checks",
+      "category": "pregnancy_scans",
+      "message_id": 38,
+      "file_id": "BAACAgUAAxkDAAMmawohp_Q3hojIyEUucKJAYogrKoIAAg4kAAJanlFUvG3441A8OBg9BA",
+      "meta": {
+        "yt_title": "11–14 Week NT Scan: What NT and Nasal Bone Mean",
+        "full_description": "A radiologist walks through a real first-trimester ultrasound and explains the NT (nuchal translucency) and NB (nasal bone) markers. You will learn what each one is and why this scan is screening, not a diagnosis. Always discuss your own report with your doctor.\n\nExplained by a radiologist, Dr. Hemakshu V. Chaudhari, D.M.R.E\n\nEducational content only. This is not medical advice and cannot replace a consultation:\nplease talk to your own doctor about your report.\nVisuals are drawn illustrations; any real scan shown is anonymised and shared by the radiologist.\n\n#Shorts #Radiology #ScanExplained",
+        "tags": [
+          "NT scan",
+          "nuchal translucency",
+          "11-14 week scan",
+          "first trimester ultrasound",
+          "nasal bone ultrasound",
+          "NT scan explained",
+          "dating scan",
+          "pregnancy screening scan",
+          "what is NT scan",
+          "radiology",
+          "scan explained",
+          "medical education"
+        ]
+      }
     }
   ],
-  "note": "Same content, but show the real NT scan image as reference and explain the NB (nasal bone) and NT (nuchal translucency) markers on it."
+  "tg_offset": 10116758
 }
